@@ -1,0 +1,15 @@
+
+schema {
+    query: Query
+}
+
+type Query {
+    users: [User]!
+    user(id: Long) : User
+}
+
+type User {
+    id: Int
+    firstName: String
+    lastName: String
+}
