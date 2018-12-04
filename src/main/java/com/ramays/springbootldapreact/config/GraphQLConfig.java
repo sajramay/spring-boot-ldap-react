@@ -8,18 +8,14 @@ import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 
-import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 @Configuration
 public class GraphQLConfig {
-
-    @Value("classpath:graphql.sdl")
-    private Resource graphQL;
 
     @Autowired
     private DataFetcher userDataFetcher;
@@ -28,13 +24,15 @@ public class GraphQLConfig {
     private DataFetcher usersDataFetcher;
 
     @Bean
-    public GraphQL loadGraphQLSchema() throws Exception {
-        File schemaFile = graphQL.getFile();
-
-        TypeDefinitionRegistry typeDefinitionRegistry = new SchemaParser().parse(schemaFile);
+    public GraphQL loadGraphQLSchema() {
+        TypeDefinitionRegistry typeDefinitionRegistry = new SchemaParser().parse(loadSchema());
         RuntimeWiring runtimeWiring = buildRuntimeWiring();
         GraphQLSchema graphQLSchema = new SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, runtimeWiring);
         return GraphQL.newGraphQL(graphQLSchema).build();
+    }
+
+    private Reader loadSchema() {
+        return new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("graphql-schema.sdl"));
     }
 
     private RuntimeWiring buildRuntimeWiring() {

@@ -1,45 +1,165 @@
 package com.ramays.springbootldapreact.config;
 
-import org.springframework.context.annotation.Profile;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.AuthenticationException;
-//import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-//import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.ldap.core.support.BaseLdapPathContextSource;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
+import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
-//@EnableWebSecurity
-//@Profile("!nosec")
-public class WebSecurityConfig /*implements WebMvcConfigurer */{
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.formLogin().loginPage("/login").usernameParameter("j_username").passwordParameter("j_password").permitAll()
-//                .successHandler(new MySuccessHandler())
-//                .failureHandler(new MyFailureHandler())
-//                .and().authorizeRequests().mvcMatchers("/login", "/logout", "/", "/h2-console/**").permitAll()
-//                .and().csrf()
-//                .and().headers().frameOptions().deny()
-//                .and().logout().logoutUrl("/logout");
-//    }
+    public final static String ROLE_APP_USER     = "ROLE_APP_USER";
+    public final static String ROLE_APP_READONLY = "ROLE_APP_READONLY";
+
+    @Value("${myapp.username}")
+    private String myAppUsername;
+
+    @Value("${myapp.password}")
+    private String myAppPassword;
+
+    @Value("${myapp.ldap.provider.url}")
+    private String ldapProviderUrl;
+
+    @Value("${myapp.ldap.provider.userdn}")
+    private String ldapProviderUserDn;
+
+    @Value("${myapp.ldap.provider.password}")
+    private String ldapProviderPassword;
+
+    @Value("${myapp.ldap.user.dn.patterns}")
+    private String ldapUserDnPatterns;
+
+    @Value("${myapp.ldap.group.search.base}")
+    private String ldapGroupSearchBase;
+
+    @Bean
+    public SimpleUrlAuthenticationFailureHandler failureHandler() {
+        return new SimpleUrlAuthenticationFailureHandler() {
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+                response.sendError(401, "Authentication failure");
+            }
+        };
+    }
+
+    @Bean
+    public SimpleUrlAuthenticationSuccessHandler successHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                response.setStatus(200);
+            }
+        };
+    }
+
+    private LogoutSuccessHandler logoutSuccessHandler() {
+        return (httpServletRequest, httpServletResponse, authentication) -> httpServletResponse.setStatus(200);
+    }
+
+    private AuthenticationEntryPoint authenticationEntryPoint() {
+        return (httpServletRequest, httpServletResponse, e) -> httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+    }
+
+    private LdapAuthoritiesPopulator pop() {
+        final DefaultLdapAuthoritiesPopulator pop = new DefaultLdapAuthoritiesPopulator(contextSource(), ldapGroupSearchBase);
+        pop.setGroupSearchFilter("member={0}");
+        return pop;
+    }
+
+    private BaseLdapPathContextSource contextSource() {
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(
+                Collections.singletonList(ldapProviderUrl), "DC=org,DC=com");
+        contextSource.setUserDn(ldapProviderUserDn);
+        contextSource.setPassword(ldapProviderPassword);
+
+        return contextSource;
+    }
+
+    private GrantedAuthoritiesMapper mapper() {
+        return collection -> {
+            SimpleGrantedAuthority defaultAuthority = new SimpleGrantedAuthority(ROLE_APP_READONLY);
+            ArrayList<GrantedAuthority> auths = new ArrayList<>();
+            auths.add(defaultAuthority);
+            auths.addAll(collection);
+            return auths;
+        };
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        // username and password from properties file
+        auth
+                .inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder)
+                .withUser(myAppUsername)
+                .password(passwordEncoder.encode(myAppPassword))
+                .roles(ROLE_APP_READONLY.substring(5), ROLE_APP_USER.substring(5));
+
+        // username and password from ldap (such as ActivDirectory)
+//        auth
+//                .ldapAuthentication()
+//                .userDnPatterns(ldapUserDnPatterns)
+//                .ldapAuthoritiesPopulator(pop())
+//                .authoritiesMapper(mapper())
+//                .contextSource(contextSource());
+    }
+
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringAntMatchers("/auth", "/logout")
+            .and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+            .and()
+                .formLogin()
+                .loginProcessingUrl("/auth")
+                .successHandler(successHandler())
+                .failureHandler(failureHandler())
+                .usernameParameter("j_username")
+                .passwordParameter("j_password")
+                .permitAll()
+            .and()
+                .httpBasic()
+            .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(logoutSuccessHandler())
+                .permitAll()
+            .and()
+                .headers()
+                .frameOptions()
+                .deny()
+            .and()
+                .authorizeRequests()
+                .antMatchers("/graphql").authenticated()
+                .antMatchers("/", "/auth", "/logout").permitAll();
+
+        httpSecurity.headers().cacheControl();
+    }
 }
-
-//class MySuccessHandler implements AuthenticationSuccessHandler {
-//    @Override
-//    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-//        httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-//    }
-//}
-//
-//class MyFailureHandler implements AuthenticationFailureHandler {
-//    @Override
-//    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-//        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//    }
-//}
-

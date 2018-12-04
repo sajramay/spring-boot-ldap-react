@@ -1,0 +1,5 @@
+export const LOGGING_IN   = "auth.LOGGING_IN"
+export const LOGGED_IN    = "auth.LOGGED_IN"
+export const LOGGED_OUT   = "auth.LOGGED_OUT"
+export const AUTH_ERROR   = "auth.AUTH_ERROR"
+export const SERVER_ERROR = "auth.SERVER_ERROR"

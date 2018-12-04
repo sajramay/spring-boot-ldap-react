@@ -8,8 +8,8 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
@@ -23,14 +23,14 @@
     "eject": "react-scripts eject"
   },
   "proxy": {
-    "/api": {
-      "target": "http://localhost:8080/"
+    "/graphql": {
+      "target": "http://localhost:9090/"
     },
     "/auth": {
-      "target": "http://localhost:8080/"
+      "target": "http://localhost:9090/"
     },
     "/logout": {
-      "target": "http://localhost:8080/"
+      "target": "http://localhost:9090/"
     }
   }
 }
