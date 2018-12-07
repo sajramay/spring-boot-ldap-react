@@ -1,4 +1,4 @@
-package com.ramays.springbootldapreact.config;
+package com.github.thewaterwalker.springbootldapreact.config;
 
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;

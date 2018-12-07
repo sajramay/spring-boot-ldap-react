@@ -1,4 +1,9 @@
 
+1. set up database (postgres ?)
+2. set up graphiql
+3. render table from react table
+4. 
+
 # Application Bootstrap Approach
 ### Spring Boot
 This application starts with Spring Boot v2 which was created using the helper site at https://start.spring.io

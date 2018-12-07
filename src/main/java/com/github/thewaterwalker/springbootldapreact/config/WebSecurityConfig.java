@@ -1,4 +1,4 @@
-package com.ramays.springbootldapreact.config;
+package com.github.thewaterwalker.springbootldapreact.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

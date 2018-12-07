@@ -1,4 +1,4 @@
-package com.ramays.springbootldapreact;
+package com.github.thewaterwalker.springbootldapreact;
 
 import org.junit.Assert;
 import org.junit.Test;

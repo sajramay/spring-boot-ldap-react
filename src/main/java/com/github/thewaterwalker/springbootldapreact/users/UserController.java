@@ -1,5 +1,5 @@
 
-package com.ramays.springbootldapreact.users;
+package com.github.thewaterwalker.springbootldapreact.users;
 
 import graphql.GraphQL;
 import org.slf4j.Logger;

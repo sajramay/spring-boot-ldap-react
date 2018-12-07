@@ -1,4 +1,4 @@
-package com.ramays.springbootldapreact;
+package com.github.thewaterwalker.springbootldapreact;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
