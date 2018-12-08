@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="USER")
+// TODO turn into a Lombok user
 public class User {
 
     @Id

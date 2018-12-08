@@ -133,7 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringAntMatchers("/auth", "/logout")
+                .ignoringAntMatchers("/graphiql", "/graphql")
             .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
             .and()
@@ -158,7 +158,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/graphql").authenticated()
-                .antMatchers("/", "/auth", "/logout").permitAll();
+                .antMatchers("/", "/graphiql", "/auth", "/logout").permitAll();
 
         httpSecurity.headers().cacheControl();
     }
