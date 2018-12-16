@@ -1,15 +1,20 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'
-import * as authActions from '../store/auth/actions'
-import * as authSelectors from '../store/auth/reducer'
+import { NavLink } from 'react-router-dom';
+import * as authActions from '../store/auth/actions';
+import * as authSelectors from '../store/auth/reducer';
+import * as userActions from '../store/users/actions';
+import * as userSelectors from '../store/users/reducer';
 import { withRouter, Redirect } from "react-router";
 import connect from "react-redux/es/connect/connect";
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
 class Home extends React.Component {
 
     constructor(props) {
         super(props)
         this.handleLogout = this.handleLogout.bind(this)
+        this.props.dispatch(userActions.getUsers())
     }
 
     handleLogout() {
@@ -40,15 +45,32 @@ class Home extends React.Component {
         return (
             <div>
             {this.renderNavBar()}
-            <h2>Home page</h2>
-                Render data from the server here
+            <h2>Users</h2>
+                <div>
+                <ReactTable
+                    data={this.props.users}
+                    columns={
+                        [
+                            {Header: "ID", accessor: "id", width: 100},
+                            {Header: "First Name", accessor: "firstName"},
+                            {Header: "Last Name", accessor: "lastName"}
+                        ]
+                    }
+                    defaultPageSize={10}
+                    className="-striped -highlight"
+                >
+                </ReactTable>
+                </div>
             </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    return { loggedIn : authSelectors.getLoginDetails(state).loggedIn}
+    return {
+        loggedIn : authSelectors.getLoginDetails(state).loggedIn,
+        users : userSelectors.getUsers(state).users
+    }
 }
 
 export default withRouter(connect(mapStateToProps)(Home));

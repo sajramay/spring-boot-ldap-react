@@ -7,9 +7,6 @@ export function authenticate(username, password) {
 
         const { status, error } = await authService.login(username, password)
 
-        console.log(status)
-        console.log(error)
-
         switch (status) {
             case 200:
                 dispatch({type: types.LOGGED_IN, username });
