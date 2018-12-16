@@ -1,6 +1,7 @@
 /target
 .mvn
 node
+.DS_Store
 
 ### STS ###
 .apt_generated
