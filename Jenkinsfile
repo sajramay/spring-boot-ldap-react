@@ -6,7 +6,7 @@ pipeline {
                 withMaven(maven : 'maven_3_6_0') {
                     sh 'mvn clean compile'
                 }
-                nodejs(nodeJSInstallationName: 'NodeJS_11_4_0', configId: '<config-file-provider-id>') {
+                nodejs(nodeJSInstallationName: 'NodeJS_11_4_0') {
                     sh 'cd src/main/frontend && npm install && npm build'
                 }
             }
