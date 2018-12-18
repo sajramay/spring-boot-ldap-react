@@ -6,8 +6,7 @@ pipeline {
                 withMaven(maven : 'maven_3_6_0') {
                     sh 'mvn clean compile'
                 }
-                withNPM(npmrcConfig:'my_npmrc') {
-                    echo "Performing npm build..."
+                nodejs(nodeJSInstallationName: 'NodeJS_11_4_0', configId: '<config-file-provider-id>') {
                     sh 'cd src/main/frontend && npm install && npm build'
                 }
             }
