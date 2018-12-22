@@ -1,7 +1,14 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Build NPM') {
+            steps {
+                nodejs(nodeJSInstallationName: 'NodeJS_11_4_0') {
+                    sh 'cd src/main/frontend && npm install && npm build'
+                }
+            }
+        }
+        stage('Build Java') {
             steps {
                 withMaven(maven : 'maven_3_6_0') {
                     sh 'mvn clean compile'
@@ -11,8 +18,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy Stage') {
+        stage('Install') {
             steps {
                 withMaven(maven : 'maven_3_6_0') {
                     sh 'mvn install -DskipTests'
