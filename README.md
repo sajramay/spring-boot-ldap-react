@@ -14,6 +14,7 @@ $ mvn clean spring-boot:run -P hotreload
 Now start the React development server (in the same folder as the package.json) and browse to `http://localhost:3000` for hot-reload of the ReactJS app while you are developing
 ```
 $ cd src/main/frontend
+$ npm install
 $ npm start
 ```
 
@@ -29,7 +30,7 @@ $ mvn clean install -P react
 If you don't want to use Maven to build the release version of the ReactJS app run the following in the `frontend` directory and then run Maven separately
 ```
 $ cd src/main/frontend
-$ npm run-script build postbuild
+$ npm run build
 $ cd -
 $ mvn clean install
 ```
@@ -39,6 +40,14 @@ You can now run the app using Java 8 or above as follows
 $ ${JAVA_8_HOME}/bin/java -jar target/spring-boot-ldap-react-0.0.1-SNAPSHOT.jar
 ```
 
-### TODO
+### Jenkins
+Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed.  Install the following plugins
+- Pipeline Maven Integration Plugin
+- NodeJS plugin (https://wiki.jenkins.io/display/JENKINS/NodeJS+Plugin)
 
-Jenkins, Docker and Kubernetes build instructions to come
+Configure Java and Maven and set the Maven installation name to 'maven_3_6_0'.  Jenkins will install Maven and Java on demand.
+
+Configure NodeJS in Global Tool configurations and set the installation name to 'NodeJS_11_4_0'
+
+Create a new Pipeline project.  Under Pipeline pick 'Pipeline script from SCM' and set the SCM path to your repo (or this repo for a test)
+
