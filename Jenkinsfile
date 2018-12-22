@@ -14,7 +14,7 @@ pipeline {
                     sh 'mvn clean compile'
                 }
                 nodejs(nodeJSInstallationName: 'NodeJS_11_4_0') {
-                    sh 'cd src/main/frontend && npm install && npm build'
+                    sh 'cd src/main/frontend && npm install && npm run-script build'
                 }
             }
         }
