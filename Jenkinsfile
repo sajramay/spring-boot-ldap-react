@@ -15,5 +15,10 @@ pipeline {
                 }
             }
         }
+        stage('Create Docker Image') {
+            steps {
+                sh 'docker build -t thewaterwalker/spring-boot-ldap-react:latest .'
+            }
+        }
     }
 }
