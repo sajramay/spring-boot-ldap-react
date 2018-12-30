@@ -16,9 +16,7 @@ pipeline {
             }
         }
         stage('Create Docker Image') {
-            steps {
-                docker.build("thewaterwalker/spring-boot-ldap-react:latest")
-            }
+            docker.build("thewaterwalker/spring-boot-ldap-react:latest")
         }
     }
 }
