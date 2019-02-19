@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: springldap
+spec:
+  replicas: 3
+  selector:
+    app: springldap
+  template:
+    metadata:
+      labels:
+        app: springldap
+    spec:
+      containers:
+      - name: springldap
+        image: localhost:5000/dev/ramays/springldap
+        ports:
+        - containerPort: 9090
+

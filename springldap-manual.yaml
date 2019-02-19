@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: springldap-manual
+spec:
+  containers:
+  - image: localhost:5000/dev/ramays/springldap
+    name: springldap
+    ports:
+    - containerPort: 9090
+      protocol: TCP
+

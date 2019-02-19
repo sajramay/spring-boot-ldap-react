@@ -1,0 +1,17 @@
+apiVersion: apps/v1beta2
+kind: ReplicaSet
+metadata:
+  name: springldap
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springldap
+  template:
+    metadata:
+      labels:
+        app: springldap
+    spec:
+      containers:
+      - name: springldap
+        image: localhost:5000/dev/ramays/springldap
