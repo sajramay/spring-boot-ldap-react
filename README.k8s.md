@@ -39,53 +39,81 @@ Push to Local Registry
 $ docker push localhost:5000/dev/ramays/springldap
 ```
 
-Start the Kubectl instance
+Run a single pod using the Kubernetes command line, inspect the Pod and then invoke the Spring Boot App
 ```sh
-$ kubectl run springldap --image=localhost:5000/dev/ramays/springldap --port=9090 --generator=run/v1
+$ kubectl run springldap --image=localhost:5000/dev/ramays/springldap --port=9090 --generator=run-pod/v1
+
+$ kubectl get pods
+NAME         READY   STATUS    RESTARTS   AGE
+springldap   1/1     Running   0          107s
+
+$ kubectl describe pod/springldap
+Name:               springldap
+Namespace:          default
+Priority:           0
+PriorityClassName:  <none>
+Node:               minikube/192.168.0.21
+Start Time:         Tue, 19 Feb 2019 23:47:12 +0000
+Labels:             run=springldap
+Annotations:        <none>
+Status:             Running
+IP:                 172.17.0.5
+Containers:
+  springldap:
+    Container ID:   docker://59d3327a4135b62a7d5d01a9b0cb3923953757f6ba1845647f9c49ded5b97205
+    Image:          localhost:5000/dev/ramays/springldap
+    Image ID:       docker-pullable://localhost:5000/dev/ramays/springldap@sha256:3141232e1e660a788bf14f83d97ed4e1c240f1691c779fd7ac2fc8bee076a7f4
+    Port:           9090/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 19 Feb 2019 23:47:13 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-rbxnm (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-rbxnm:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-rbxnm
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  3m3s  default-scheduler  Successfully assigned default/springldap to minikube
+  Normal  Pulling    3m2s  kubelet, minikube  pulling image "localhost:5000/dev/ramays/springldap"
+  Normal  Pulled     3m2s  kubelet, minikube  Successfully pulled image "localhost:5000/dev/ramays/springldap"
+  Normal  Created    3m2s  kubelet, minikube  Created container
+  Normal  Started    3m2s  kubelet, minikube  Started container
+
+$ curl http://172.17.0.5:9090
+<!DOCTYPE html>.....
 ```
 
+# General Inspection Commands
 Check Services - Pods
 ```sh
-$ kuvectl get pods
+$ kubectl get pods
 ```
 
 Check Services - Replication Controllers
 ```sh
-$ kuvectl get rc
+$ kubectl get rc
 ```
 
 Check Services
 ```sh
 $ kubectl get services
-```
-
-Expose Service Through a Load-Balancer (not supported in Minikube v0.30.0)
-```sh
-$ kubectl expose rc springldap --type=LoadBalancer --name springldap-http
-```
-
-Expose  Service Through a NodePort
-```sh
-$ kubectl expose rc springldap --name springldap-nodeport
-```
-
-Check Services
-```sh
-$ kubectl get services
-NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
-kubernetes            ClusterIP   10.96.0.1       <none>        443/TCP    71d
-springldap-nodeport   ClusterIP   10.109.11.173   <none>        9090/TCP   6s
-$ curl 10.109.11.173:9090
-```
-
-Scale Up
-```sh
-$ kubectl scale rc springldap --replicas=3
-```
-
-Delete a Single Pod (A new one will be started by the RC)
-```sh
-$ kubectl delete po springldap-xxxxx
 ```
 
 Pod information
@@ -112,7 +140,7 @@ service "kubernetes" deleted                     <-- will be recreated!
 service "springldap-nodeport" deleted
 ```
 
-Manually Create a Pod
+## Create a Pod Using YAML
 ```YAML
 apiVersion: v1
 kind: Pod
@@ -158,6 +186,37 @@ $ kubectl create -f springldap-rc.yaml
 $ kubectl get pods,rc,services
 ```
 
+
+# Using LoadBalancers and NodePorts
+Expose Service Through a Load-Balancer (not supported in Minikube v0.30.0)
+```sh
+$ kubectl expose rc springldap --type=LoadBalancer --name springldap-http
+```
+
+Expose  Service Through a NodePort
+```sh
+$ kubectl expose rc springldap --name springldap-nodeport
+```
+
+Check Services
+```sh
+$ kubectl get services
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+kubernetes            ClusterIP   10.96.0.1       <none>        443/TCP    71d
+springldap-nodeport   ClusterIP   10.109.11.173   <none>        9090/TCP   6s
+$ curl 10.109.11.173:9090
+```
+
+Scale Up
+```sh
+$ kubectl scale rc springldap --replicas=3
+```
+
+Delete a Single Pod (A new one will be started by the RC)
+```sh
+$ kubectl delete po springldap-xxxxx
+```
+
 Display Pods along with the app label
 ```sh
 $ kubectl get pods -L app -o wide
@@ -170,7 +229,7 @@ $ kubectl edit rc springldap
 
 Delete RC but Keep the Pods Runnning
 ```sh
-$ kubectl delete rc kubia --cascade=false
+$ kubectl delete rc springldap --cascade=false
 ```
 
 ## Create ReplicaSet
