@@ -184,16 +184,32 @@ spec:
 ```sh
 $ kubectl create -f springldap-rc.yaml
 $ kubectl get pods,rc,services
+NAME                   READY   STATUS    RESTARTS   AGE
+pod/springldap-l9vkj   1/1     Running   0          54s
+pod/springldap-l9xsh   1/1     Running   0          54s
+pod/springldap-vcsl4   1/1     Running   0          54s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicationcontroller/springldap   3         3         3       54s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   7m29s
 ```
 
-
 # Using LoadBalancers and NodePorts
-Expose Service Through a Load-Balancer (not supported in Minikube v0.30.0)
+
+Clean up and recreate the pods using a Replication Controller
+```sh
+$ kubectl delete all --all
+$ kubectl create -f springldap-rc.yaml
+```
+
+Expose Spring Boot Pods Through a Load-Balancer (not supported in Minikube v0.30.0)
 ```sh
 $ kubectl expose rc springldap --type=LoadBalancer --name springldap-http
 ```
 
-Expose  Service Through a NodePort
+Expose Spring Boot Pods Through a NodePort
 ```sh
 $ kubectl expose rc springldap --name springldap-nodeport
 ```
@@ -253,22 +269,21 @@ spec:
         image: localhost:5000/dev/ramays/springldap
 ```
 
-## Create Services
-
+A ReplicaSet is the replacement for ReplicationControllers
 ```sh
-$ kubectl  delete all --all
-$ kubectl create -f springldap-rc.yaml
-$ kubectl get pods,rc,services
+$ kubectl delete all --all
+$ kubectl create -f springldap-rs.yaml
+$ kubectl get pods,rs,services
 NAME                   READY   STATUS    RESTARTS   AGE
-pod/springldap-2ntqv   1/1     Running   0          3s
-pod/springldap-76n5j   1/1     Running   0          3s
-pod/springldap-k9dwk   1/1     Running   0          3s
+pod/springldap-4m5bk   1/1     Running   0          10s
+pod/springldap-n5r6p   1/1     Running   0          10s
+pod/springldap-zspzn   1/1     Running   0          10s
 
 NAME                               DESIRED   CURRENT   READY   AGE
-replicationcontroller/springldap   3         3         3       3s
+replicaset.extensions/springldap   3         3         3       10s
 
 NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   42s
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   23s
 ```
 
 ## Create a Service to Wrap the Pods
