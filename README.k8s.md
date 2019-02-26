@@ -360,3 +360,99 @@ $ curl 10.107.146.119
 ```sh
 $ curl 10.101.78.142  (does not work externally)
 ```
+
+Get the environment for a particular Pod which will show the host and port that exposes this Pod through a Service.
+```sh
+$ kubectl get services
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP   5d16h
+springldap   ClusterIP   10.106.116.230   <none>        80/TCP    5d16h
+
+$ kubectl exec springldap-xxx env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/jdk/bin
+HOSTNAME=springldap-rkbfp
+SPRINGLDAP_PORT_80_TCP_PORT=80                        
+SPRINGLDAP_SERVICE_HOST=10.106.116.230                 <----
+SPRINGLDAP_PORT_80_TCP=tcp://10.106.116.230:80
+SPRINGLDAP_PORT_80_TCP_ADDR=10.106.116.230
+KUBERNETES_SERVICE_HOST=10.96.0.1                      <----
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_PORT=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_SERVICE_PORT=443                            <----
+KUBERNETES_SERVICE_PORT_HTTPS=443
+SPRINGLDAP_PORT=tcp://10.106.116.230:80
+SPRINGLDAP_PORT_80_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP_PORT=443
+SPRINGLDAP_SERVICE_PORT=80                             <----
+JAVA_VERSION_MAJOR=8
+JAVA_VERSION_MINOR=192
+JAVA_VERSION_BUILD=12
+JAVA_PACKAGE=server-jre
+JAVA_JCE=standard
+JAVA_HOME=/opt/jdk
+GLIBC_REPO=https://github.com/sgerrand/alpine-pkg-glibc
+GLIBC_VERSION=2.28-r0
+LANG=C.UTF-8
+HOME=/root
+```
+Note that all services are available through environment variables. So if a mydatabase service is created, for example, that wil be available through `MYDATABASE_SERVICE_HOST` and `MYDATABASE_SERVICE_PORT`
+
+You cannot ping a Service IP because it is a virtual IP address and has no meaning without the port
+```sh
+$ curl 10.106.116.230
+<!DOCTYPE html><html....
+
+$ ping 10.106.116.230
+PING 10.106.116.230 (10.106.116.230) 56(84) bytes of data.
+^C
+--- 10.106.116.230 ping statistics ---
+7 packets transmitted, 0 received, 100% packet loss, time 6131ms
+```
+
+## Exposing the Service to External Clients
+
+The Service can be exposed as a LoadBalancer, a NodePort or through an Ingress Service
+
+### NodePort
+
+For a NodePort Service, each cluster node open a port on the node itself will redirect traffic received on that cluster node to the underlying Service.  Then the Service is accessible through a dedicated port on all nodes.
+
+```YAML
+apiVersion: v1
+kind: Service
+metadata:
+  name: springldap-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 9090
+    nodePort: 19090
+  selector:
+    app: springldap
+```
+Note that minikube only has a single node.
+
+```sh
+$ kubectl get -o wide nodes
+NAME       STATUS   ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+minikube   Ready    master   88d   v1.13.3   192.168.0.21   <none>        Ubuntu 18.04.1 LTS   4.15.0-45-generic   docker://18.9.1
+
+$ curl 192.168.0.21:30090
+<!DOCTYPE html><html lang="en">....
+
+$ kubectl get svc
+NAME                  TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes            ClusterIP   10.96.0.1        <none>        443/TCP        5d16h
+springldap            ClusterIP   10.106.116.230   <none>        80/TCP         5d16h
+springldap-nodeport   NodePort    10.110.130.36    <none>        80:30090/TCP   5m21s
+
+$ curl 10.110.130.36
+<!DOCTYPE html><html lang="en">....
+```
+The same would work for all Node IP addresses at port `30090`
+
+##  Passwords through Kubernetes Secrets
+
