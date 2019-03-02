@@ -417,7 +417,7 @@ The Service can be exposed as a LoadBalancer, a NodePort or through an Ingress S
 
 ### NodePort
 
-For a NodePort Service, each cluster node open a port on the node itself will redirect traffic received on that cluster node to the underlying Service.  Then the Service is accessible through a dedicated port on all nodes.
+For a NodePort Service, each cluster node open a port on the node itself will redirect traffic received on that cluster node to the underlying Service.  Then the Service is accessible through a dedicated port on all nodes.  The NodePort values are from 30000 to 32768
 
 ```YAML
 apiVersion: v1
@@ -454,5 +454,75 @@ $ curl 10.110.130.36
 ```
 The same would work for all Node IP addresses at port `30090`
 
-##  Passwords through Kubernetes Secrets
+## Configuration and Passwords through Kubernetes ConfigMaps and Secrets
 
+Kubernetes allows configuration options to be separated out into ConfigMaps, simple maps with key value pairs in which the values can be literals to files, which the application does not need to be aware of.  The contents of the map are made available to the containers as environment variables or as files in a volume.
+
+### Creating ConfigMap from a command line
+```sh
+$ kubectl create configmap spring-ldap-configmap --from-literal=database-name=MYDB
+```
+
+### Creating ConfigMap from a file
+
+```sh
+$ kubectl create configmap spring-ldap-configmap --from-file=application.properties
+```
+
+### Providing a ConfigMap entry to a Container
+
+#### Single Entry As an Environment Variable
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: springldap-manual
+spec:
+  containers:
+  - image: localhost:5000/dev/ramays/springldap
+    env:                                          <----
+    - name : INTERVAL                             <----
+      valueFrom:                                  <----
+        configMapKeyRef:                          <----
+          name: spring-ldap-configmap             <----
+          key: database-name                      <----
+    name: springldap
+    ports:
+    - containerPort: 9090
+      protocol: TCP
+```
+
+#### All entries as Environment Variables with a Prefix
+The prefix is optional but useful for grouping config entries.
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: springldap-manual
+spec:
+  containers:
+  - image: localhost:5000/dev/ramays/springldap
+    envFrom:                                      <----
+    - prefix: CONFIG_                             <----
+      configMapRef:                               <----
+        name: spring-ldap-configmap               <----
+    name: springldap
+    ports:
+    - containerPort: 9090
+      protocol: TCP
+```
+
+### Create Secret from the Command Line
+```sh
+kubectl create secret generic spring-ldap-secret --from-literal=database-password=abc123
+```
+
+### Using the Secret through an Environment Variable
+```yaml
+    env:
+    - name : DATABASE-PASSWORD
+      valueFrom:
+        configMapKeyRef:
+          name: spring-ldap-secret
+          key: database-password
+```
