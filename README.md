@@ -18,7 +18,11 @@ $ npm install
 $ npm start
 ```
 
-You can now make code changes in ReactJS and Java and the code will be hot-reloaded into the running application
+You can now make code changes in ReactJS and Java and the code will be hot-reloaded into the running application.
+
+By the way, until you change the config, the default **username** and **password** are both "tt".
+
+![DEMO](https://user-images.githubusercontent.com/19827042/83907979-8bd66900-a723-11ea-856f-8ef113ef8977.gif)
 
 ### Releasing
 
