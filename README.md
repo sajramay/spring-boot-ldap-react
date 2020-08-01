@@ -40,6 +40,9 @@ You can now run the app using Java 8 or above as follows
 $ ${JAVA_8_HOME}/bin/java -jar target/spring-boot-ldap-react-0.0.1-SNAPSHOT.jar
 ```
 
+Username : user1
+Password : password123
+
 ### Jenkins
 Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed.  Install the following plugins
 - Pipeline Maven Integration Plugin
