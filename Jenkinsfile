@@ -1,25 +1,23 @@
 pipeline {
     agent any
+    tools {
+        nodejs 'node-10.13.0'
+        jdk 'jdk-11'
+        maven 'maven-3.6.1'
+    }
+    triggers {
+        pollSCM('H/5 6-23 * * 1-6')
+    }
     stages {
-        stage('Build NPM') {
+        stage('Build NPM front end') {
             steps {
-                nodejs(nodeJSInstallationName: 'NodeJS_11_4_0') {
-                    sh 'cd src/main/frontend && npm install && npm run build'
-                }
+                sh 'cd src/main/frontend && npm install'
+                sh 'cd src/main/frontend && npm run-script build'
             }
         }
         stage('Build Java') {
             steps {
-                withMaven(maven : 'maven_3_6_0') {
-                    sh 'mvn clean install'
-                }
-            }
-        }
-        stage('Create Docker Image') {
-            steps {
-                script {
-                    docker.build("thewaterwalker/spring-boot-ldap-react:latest")
-                }
+                sh 'mvn clean deploy'
             }
         }
     }
