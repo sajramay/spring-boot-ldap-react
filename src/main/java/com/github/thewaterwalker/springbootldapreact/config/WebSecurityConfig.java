@@ -149,7 +149,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringAntMatchers("/graphiql", "/graphql")
             .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
             .and()
