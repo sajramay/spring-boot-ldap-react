@@ -19,6 +19,7 @@ import com.github.thewaterwalker.springbootldapreact.users.User;
 import com.github.thewaterwalker.springbootldapreact.users.UserRepository;
 import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Secured({WebSecurityConfig.ROLE_APP_READONLY, WebSecurityConfig.ROLE_APP_USER})
 public class GraphQLDataFetchers {
 
     private final UserRepository userRepository;

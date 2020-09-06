@@ -15,9 +15,12 @@
 
 package com.github.thewaterwalker.springbootldapreact.users;
 
+import com.github.thewaterwalker.springbootldapreact.config.WebSecurityConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Secured({WebSecurityConfig.ROLE_APP_READONLY, WebSecurityConfig.ROLE_APP_USER})
 public interface UserRepository extends JpaRepository<User, Long> {
 }
