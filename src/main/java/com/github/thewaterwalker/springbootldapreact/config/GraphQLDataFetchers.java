@@ -19,24 +19,47 @@ import com.github.thewaterwalker.springbootldapreact.users.User;
 import com.github.thewaterwalker.springbootldapreact.users.UserRepository;
 import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
+import org.dataloader.DataLoader;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class GraphQLDataFetchers {
 
     private final UserRepository userRepository;
+    private final GraphQLDataLoaders graphQLDataLoaders;
 
-    public DataFetcher<User> userFetcher() {
+    public DataFetcher<Map<String, Object>> userFetcher() {
         return dataFetchingEnvironment -> {
             Long id = dataFetchingEnvironment.getArgument("id");
-            return this.userRepository.findById(id).orElse(null);
+            Optional<User> userOpt = this.userRepository.findById(id);
+            if (userOpt.isEmpty()) {
+                return Collections.emptyMap();
+            }
+
+            HashMap<String, Object> map = new HashMap<>();
+            User user = userOpt.get();
+            map.put("id", user.getId());
+            map.put("firstName", user.getFirstName());
+            map.put("lastName", user.getLastName());
+            map.put("description", "some description");
+
+            return map;
         };
     }
 
-    public DataFetcher<Collection<User>> usersFetcher() {
+    public DataFetcher<Collection<User>> allUsersFetcher() {
         return dataFetchingEnvironment -> this.userRepository.findAll();
+    }
+
+    public DataFetcher<Collection<User>> usersFetcher() {
+        return dataFetchingEnvironment -> {
+            DataLoader<Long, User> dl = DataLoader.newDataLoader(this.graphQLDataLoaders.userBatchLoader);
+            List<Long> ids = dataFetchingEnvironment.getArgument("ids");
+            dl.loadMany(ids);
+            return dl.dispatchAndJoin();
+        };
     }
 }

@@ -4,12 +4,16 @@ schema {
 }
 
 type User {
-    id: Int
+    id: Long
     firstName: String
     lastName: String
+    # note that description is not part of the User JPA Java entity so we return a map from the
+    # DataFetcher to allow GraphQL to construct this GraphQL entity
+    description: String
 }
 
 type Query {
-    users: [User]
-    user(id: Int) : User
+    allUsers : [User]
+    users(ids: [Long]) : [User]
+    user(id: Long) : User
 }

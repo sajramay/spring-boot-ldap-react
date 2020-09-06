@@ -20,6 +20,7 @@ import graphql.schema.idl.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -43,6 +44,7 @@ public class GraphQLProvider {
         return RuntimeWiring.newRuntimeWiring()
                 .type(TypeRuntimeWiring.newTypeWiring("Query")
                     .dataFetcher("user", graphQLDataFetchers.userFetcher())
+                    .dataFetcher("allUsers", graphQLDataFetchers.allUsersFetcher())
                     .dataFetcher("users", graphQLDataFetchers.usersFetcher())
                 )
                 .build();

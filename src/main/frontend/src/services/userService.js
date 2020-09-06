@@ -11,7 +11,7 @@ class UserService {
                 data: {
                     query: `
                         query {
-                          users {
+                          allUsers {
                             id
                             firstName
                             lastName
@@ -25,7 +25,7 @@ class UserService {
             console.log(response.data.data.users)
 
             if (response.status === 200) {
-                return { users: response.data.data.users, status: response.status }
+                return { users: response.data.data.allUsers, status: response.status }
             } else {
                 return { loggedIn: false, error:response.error, status: response.status }
             }
