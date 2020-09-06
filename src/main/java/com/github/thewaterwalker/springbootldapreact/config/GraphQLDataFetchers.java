@@ -19,17 +19,16 @@ import com.github.thewaterwalker.springbootldapreact.users.User;
 import com.github.thewaterwalker.springbootldapreact.users.UserRepository;
 import graphql.schema.DataFetcher;
 import lombok.RequiredArgsConstructor;
-import org.dataloader.DataLoader;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class GraphQLDataFetchers {
 
     private final UserRepository userRepository;
-    private final GraphQLDataLoaders graphQLDataLoaders;
 
     public DataFetcher<Map<String, Object>> userFetcher() {
         return dataFetchingEnvironment -> {
@@ -38,28 +37,32 @@ public class GraphQLDataFetchers {
             if (userOpt.isEmpty()) {
                 return Collections.emptyMap();
             }
-
-            HashMap<String, Object> map = new HashMap<>();
-            User user = userOpt.get();
-            map.put("id", user.getId());
-            map.put("firstName", user.getFirstName());
-            map.put("lastName", user.getLastName());
-            map.put("description", "some description");
-
-            return map;
+            return mapUser(userOpt.get());
         };
     }
 
-    public DataFetcher<Collection<User>> allUsersFetcher() {
-        return dataFetchingEnvironment -> this.userRepository.findAll();
-    }
-
-    public DataFetcher<Collection<User>> usersFetcher() {
+    public DataFetcher<Collection<Map<String, Object>>> allUsersFetcher() {
         return dataFetchingEnvironment -> {
-            DataLoader<Long, User> dl = DataLoader.newDataLoader(this.graphQLDataLoaders.userBatchLoader);
-            List<Long> ids = dataFetchingEnvironment.getArgument("ids");
-            dl.loadMany(ids);
-            return dl.dispatchAndJoin();
+            List<User> all = this.userRepository.findAll();
+            return all.stream().map(this::mapUser).collect(Collectors.toList());
         };
+    }
+
+    public DataFetcher<Collection<Map<String, Object>>> usersFetcher() {
+        return dataFetchingEnvironment -> {
+            Collection<Long> ids = dataFetchingEnvironment.getArgument("ids");
+            List<User> all = this.userRepository.findAllById(ids);
+            return all.stream().map(this::mapUser).collect(Collectors.toList());
+        };
+    }
+
+    private Map<String, Object> mapUser(User user) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", user.getId());
+        map.put("firstName", user.getFirstName());
+        map.put("lastName", user.getLastName());
+        // this field is not part of the JPA entity but is part of the GraphQL entity
+        map.put("description", "some description");
+        return map;
     }
 }
