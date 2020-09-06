@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>spring-boot-react</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Demo project for Spring Boot with GraphQL and LDAP</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -21,14 +21,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <lombok.version>1.18.12</lombok.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-
-        <graphql-java.version>8.0</graphql-java.version>
-        <lombok.version>1.18.12</lombok.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
-        <frontend-maven-plugin.version>1.10.0</frontend-maven-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <frontend-maven-plugin.version>1.10.0</frontend-maven-plugin.version>
+        <graphql-spring-boot-starter.version>7.0.1</graphql-spring-boot-starter.version>
     </properties>
 
     <dependencies>
@@ -50,27 +49,38 @@
             <artifactId>spring-security-ldap</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.graphql-java</groupId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.graphql-java</groupId>-->
+<!--            <artifactId>graphql-java</artifactId>-->
+<!--            <version>15.0</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.graphql-java</groupId>-->
+<!--            <artifactId>graphql-java-spring-boot-starter-webmvc</artifactId>-->
+<!--            <version>2.0</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
             <artifactId>graphql-spring-boot-starter</artifactId>
-            <version>5.0.2</version>
+            <version>${graphql-spring-boot-starter.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-tools</artifactId>
-            <version>5.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.graphql-java</groupId>
+            <groupId>com.graphql-java-kickstart</groupId>
             <artifactId>graphiql-spring-boot-starter</artifactId>
-            <version>5.0.2</version>
+            <version>${graphql-spring-boot-starter.version}</version>
+            <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>com.h2database</groupId>
