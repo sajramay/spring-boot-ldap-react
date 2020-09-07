@@ -32,6 +32,9 @@ public class GraphQLDataFetchers {
 
     private final UserRepository userRepository;
 
+    /**
+     * Fetch a specific user
+     */
     public DataFetcher<Map<String, Object>> userFetcher() {
         return dataFetchingEnvironment -> {
             Long id = dataFetchingEnvironment.getArgument("id");
@@ -43,6 +46,9 @@ public class GraphQLDataFetchers {
         };
     }
 
+    /**
+     * Fetch all users
+     */
     public DataFetcher<Collection<Map<String, Object>>> allUsersFetcher() {
         return dataFetchingEnvironment -> {
             List<User> all = this.userRepository.findAll();
@@ -50,6 +56,9 @@ public class GraphQLDataFetchers {
         };
     }
 
+    /**
+     * Fetch users by ids
+     */
     public DataFetcher<Collection<Map<String, Object>>> usersFetcher() {
         return dataFetchingEnvironment -> {
             Collection<Long> ids = dataFetchingEnvironment.getArgument("ids");

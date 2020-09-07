@@ -8,6 +8,7 @@
     "dot-prop": ">=5.1.1",
     "graphiql": "^0.11.11",
     "handlebars": ">=4.3.0",
+    "http-proxy-middleware": "^1.0.5",
     "kind-of": ">=6.0.3",
     "lodash": ">=4.17.19",
     "minimist": ">=0.2.1",
@@ -28,17 +29,6 @@
     "postbuild": "rm -rf ../resources/static/* && mkdir -p ../resources/static && cp -r build/* ../resources/static",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "proxy": {
-    "/graphql": {
-      "target": "http://localhost:9090/"
-    },
-    "/auth": {
-      "target": "http://localhost:9090/"
-    },
-    "/logout": {
-      "target": "http://localhost:9090/"
-    }
   },
   "browserslist": {
     "production": [
