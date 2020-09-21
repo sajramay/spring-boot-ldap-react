@@ -13,21 +13,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.thewaterwalker.springbootldapreact.users;
+package com.github.thewaterwalker.springbootldapreact.entity;
 
 import lombok.Data;
-import javax.persistence.*;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.math.BigDecimal;
+
+@Data
 @Entity
-@Table(name="USER")
-public @Data class User {
+public class LineItem {
     @Id
-    @GeneratedValue
     private Long id;
-
-    @Column
-    String firstName;
-
-    @Column
-    String lastName;
+    private String description;
+    private BigDecimal amount;
+    private Long userId;
 }

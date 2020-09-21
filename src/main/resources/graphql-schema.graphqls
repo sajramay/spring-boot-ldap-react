@@ -7,9 +7,11 @@ type User {
     id: Long
     firstName: String
     lastName: String
-    # note that description is not part of the User JPA Java entity so we return a map from the
-    # DataFetcher to allow GraphQL to construct this GraphQL entity
-    description: String
+
+    # these items do not exist in the User entiry itself and so have to be resolved by the
+    # UserResolver class which will look them up on demand
+    totalSpent: Float
+    maximumSpent: Float
 }
 
 type Query {

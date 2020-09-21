@@ -37,11 +37,15 @@ $ mvn clean install
 
 You can now run the app using Java 8 or above as follows
 ```
-$ ${JAVA_8_HOME}/bin/java -jar target/spring-boot-ldap-react-0.0.1-SNAPSHOT.jar
+$ ${JAVA_HOME}/bin/java -jar target/spring-boot-react-0.0.1-SNAPSHOT.jar
 ```
 
+### Login Credentials
+These are the hard-coded credentials for this demo app and they can be found in `application.properties` Please change these in your version.
+```text
 Username : user1
 Password : password123
+```
 
 ### Jenkins
 Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed.  Install the following plugins

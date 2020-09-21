@@ -13,14 +13,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.github.thewaterwalker.springbootldapreact.users;
+package com.github.thewaterwalker.springbootldapreact.entity;
 
-import com.github.thewaterwalker.springbootldapreact.config.WebSecurityConfig;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Repository;
+import lombok.Data;
+import javax.persistence.*;
 
-@Repository
-@Secured({WebSecurityConfig.ROLE_APP_READONLY, WebSecurityConfig.ROLE_APP_USER})
-public interface UserRepository extends JpaRepository<User, Long> {
+@Entity
+public @Data class User {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column
+    String firstName;
+
+    @Column
+    String lastName;
 }
