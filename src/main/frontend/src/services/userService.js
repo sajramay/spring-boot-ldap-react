@@ -15,6 +15,8 @@ class UserService {
                             id
                             firstName
                             lastName
+                            totalSpent
+                            maximumSpent
                           }
                         }                        
                     `

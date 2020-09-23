@@ -53,7 +53,9 @@ class Home extends React.Component {
                         [
                             {Header: "ID", accessor: "id", width: 100},
                             {Header: "First Name", accessor: "firstName"},
-                            {Header: "Last Name", accessor: "lastName"}
+                            {Header: "Last Name", accessor: "lastName"},
+                            {Header: "Total Spent", accessor: "totalSpent"},
+                            {Header: "Maximum", accessor: "maximumSpent"}
                         ]
                     }
                     defaultPageSize={10}
