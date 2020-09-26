@@ -48,10 +48,20 @@ $ ${JAVA_HOME}/bin/java -jar target/spring-boot-react-0.0.1-SNAPSHOT.jar
 
 ### Login Credentials
 These are the hard-coded credentials for this demo app and they can be found in `application.properties` Please change these in your version.
+Got to localhost:9090 to login once you have started the application.
+
 ```text
 Username : user1
 Password : password123
 ```
+
+![Login](assets/login.gif)
+
+### GraphiQL
+There is a built in interactive interface for GraphQL that you can use during development for testing and debugging. 
+The interface on your local run instance can be found at URL http://localhost:9090/graphiql
+
+![GraphiQL](assets/graphiql.gif)
 
 ### Jenkins
 Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed and configure with the [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in this repo
