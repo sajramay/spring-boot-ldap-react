@@ -1,7 +1,13 @@
 
-## Spring Boot Application with ReactJS, Spring Data JPA and Security enabled 
+## Simple Spring Boot ReactJS outline Application with GraphQL, ReactJS, Spring Data JPA and Spring Security enabled 
 
-This application is a lightweight Spring Boot and ReactJS outline application which can be used as the basis for your own apps
+This application is a lightweight Spring Boot and ReactJS outline application which can be used as the basis for your own apps.
+
+This application serves the GUI using a GraphQL API and demonstrates idiomatic usage of GraphQL with entity 
+GraphQLResolvers and GraphQL BatchLoaders that remove the N+1 issue by preloading data from the database 
+that the entity GraphQLResolver will need later in the request.  The loaders are scoped to the *request*.
+
+GraphQL Batching and DataLoaders : https://github.com/graphql-java/java-dataloader
 
 ### Building
 
@@ -48,13 +54,5 @@ Password : password123
 ```
 
 ### Jenkins
-Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed.  Install the following plugins
-- Pipeline Maven Integration Plugin
-- NodeJS plugin (https://wiki.jenkins.io/display/JENKINS/NodeJS+Plugin)
-
-Configure Java and Maven and set the Maven installation name to 'maven_3_6_0'.  Jenkins will install Maven and Java on demand.
-
-Configure NodeJS in Global Tool configurations and set the installation name to 'NodeJS_11_4_0'
-
-Create a new Pipeline project.  Under Pipeline pick 'Pipeline script from SCM' and set the SCM path to your repo (or this repo for a test)
+Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed and configure with the [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in this repo
 
