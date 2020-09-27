@@ -18,15 +18,11 @@ package com.github.thewaterwalker.springbootldapreact.entity;
 import lombok.Data;
 import javax.persistence.*;
 
+@Data
 @Entity
-public @Data class User {
+public class User {
     @Id
-    @GeneratedValue
     private Long id;
-
-    @Column
     String firstName;
-
-    @Column
     String lastName;
 }

@@ -86,7 +86,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -94,8 +93,7 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
-	    </plugin>	    
-
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -106,7 +104,6 @@
                     <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
@@ -130,8 +127,8 @@
                         <version>${frontend-maven-plugin.version}</version>
 
                         <configuration>
-                            <nodeVersion>v10.1.0</nodeVersion>
-                            <npmVersion>6.0.1</npmVersion>
+                            <nodeVersion>v12.18.4</nodeVersion>
+                            <npmVersion>6.14.6</npmVersion>
                             <workingDirectory>src/main/frontend</workingDirectory>
                         </configuration>
 

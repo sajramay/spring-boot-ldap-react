@@ -15,13 +15,16 @@
 
 package com.github.thewaterwalker.springbootldapreact.entity;
 
+import com.github.thewaterwalker.springbootldapreact.config.WebSecurityConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Repository
+@Secured({WebSecurityConfig.ROLE_APP_READONLY, WebSecurityConfig.ROLE_APP_USER})
 public interface LineItemRepository extends JpaRepository<LineItem, Long> {
     Collection<LineItem> findByUserId(Long id);
     Collection<LineItem> findByUserIdIn(Set<Long> ids);
