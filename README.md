@@ -41,13 +41,14 @@ $ cd -
 $ mvn clean install
 ```
 
-You can now run the app using Java 8 or above as follows
+You can now run the app using Java 11 or above as follows
 ```
 $ ${JAVA_HOME}/bin/java -jar target/spring-boot-react-0.0.1-SNAPSHOT.jar
 ```
 
 ### Login Credentials
-These are the hard-coded credentials for this demo app and they can be found in `application.properties` Please change these in your version.
+These are the hard-coded credentials for this demo app and they can be found in `application.properties` Please change 
+these in your version, preferably deleting them and enabling LDAP based authentication.
 Got to localhost:9090 to login once you have started the application.
 
 ```text

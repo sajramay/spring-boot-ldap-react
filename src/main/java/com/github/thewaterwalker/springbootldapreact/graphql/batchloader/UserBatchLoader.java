@@ -33,9 +33,6 @@ public class UserBatchLoader implements BatchLoader<Long, User> {
 
     @Override
     public CompletionStage<List<User>> load(List<Long> set) {
-        return CompletableFuture.supplyAsync(() -> {
-                return this.userRepository.findAllById(set);
-            }
-        );
+        return CompletableFuture.supplyAsync(() -> this.userRepository.findAllById(set));
     }
 }
