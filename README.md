@@ -1,5 +1,16 @@
-
 ## Simple Spring Boot ReactJS outline Application with GraphQL, ReactJS, Spring Data JPA and Spring Security enabled 
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Building](#building)
+- [Releasing](#releasing)
+- [Login Credentials](#login-credentials)
+- [GraphiQL](#graphiql)
+- [Jenkins](#jenkins)
+- [Terraform](#terraform)
+
+### Introduction
 
 This application is a lightweight Spring Boot and ReactJS outline application which can be used as the basis for your own apps.
 
@@ -67,3 +78,6 @@ The interface on your local run instance can be found at URL http://localhost:90
 ### Jenkins
 Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed and configure with the [Jenkinsfile](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) in this repo
 
+### Terraform
+
+See the [README.md](terraform/README.md) in the terraform directory for instructions on how to deploy this sample project on AWS using Terraform

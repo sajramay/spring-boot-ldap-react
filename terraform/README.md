@@ -1,3 +1,16 @@
+# Terraform
+
+## Table of Contents
+
+- [Terraform Basics](#terraform-basics)
+  * [Variables](#variables)
+  * [Locals](#locals)
+  * [Outputs](#outputs)
+  * [Data Sources](#data-sources)
+  * [Provisioners](#provisioners)
+  * [Terraform Workspaces](#terraform-workspaces)
+  * [Modules](#modules)
+
 ## Terraform Basics
 
 ### Variables
