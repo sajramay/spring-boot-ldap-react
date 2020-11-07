@@ -24,12 +24,12 @@ GraphQL Batching and DataLoaders : https://github.com/graphql-java/java-dataload
 
 Start the Spring Boot development server with hotreload as follows
 
-```
+```shell script
 $ mvn clean spring-boot:run -P hotreload
 ```
 
 Now start the React development server (in the same folder as the package.json) and browse to `http://localhost:3000` for hot-reload of the ReactJS app while you are developing
-```
+```shell script
 $ cd src/main/frontend
 $ npm install
 $ npm start
@@ -40,12 +40,12 @@ You can now make code changes in ReactJS and Java and the code will be hot-reloa
 ### Releasing
 
 Once development is complete, simply run the following from the directory that contains `pom.xml` to create a release version of the application
-```
+```shell script
 $ mvn clean install -P react
 ```
 
 If you don't want to use Maven to build the release version of the ReactJS app run the following in the `frontend` directory and then run Maven separately
-```
+```shell script
 $ cd src/main/frontend
 $ npm run build
 $ cd -
@@ -53,7 +53,7 @@ $ mvn clean install
 ```
 
 You can now run the app using Java 11 or above as follows
-```
+```shell script
 $ ${JAVA_HOME}/bin/java -jar target/spring-boot-react-0.0.1-SNAPSHOT.jar
 ```
 
