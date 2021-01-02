@@ -13,6 +13,12 @@
 
 ## Terraform Basics
 
+There are numbered subdirectories that are increasingly complex and demonstrate how to use Terraform for deploy this
+Spring Boot application.
+
+* 1_terraform_simple : very simple deployment of a single ec2 instance
+* 2_terraform_elb : a more advanced deployment with a database and an elb
+
 ### Variables
 Variables are declared in `variables.tf` and can be defined on the command line to in a file called `terraform.tfvars` in the same directory.  Alternatively pass them on the command line using the `-var` parameter to terraform.
 
