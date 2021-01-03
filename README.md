@@ -81,3 +81,7 @@ Install Jenkins from jenkins.io ensuring that the Pipeline plugin is installed a
 ### Terraform
 
 See the [README.md](terraform/README.md) in the terraform directory for instructions on how to deploy this sample project on AWS using Terraform
+
+### AWS CDK
+
+See the awscdk_typescript directory for deployment with AWS CDK which is a replacement for Terraform

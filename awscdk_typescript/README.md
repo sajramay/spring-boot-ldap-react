@@ -1,3 +1,12 @@
+# Spring Data LDAP React with AWS CDK 
+
+AWS CDK is Amazon's IaC (Infrastructure as Code) offering and is an alternative to HashiCorp's Terraform.
+CDK allows developers to use their programming language of choice rather than a DSL in Terraform (HCL).
+
+This sample is written in TypeScript and the main application level additions are in lib/awscdk-stack.ts
+
+<https://aws.amazon.com/cdk/>
+
 # Welcome to your CDK TypeScript project!
 
 This is a blank project for TypeScript development with CDK.
