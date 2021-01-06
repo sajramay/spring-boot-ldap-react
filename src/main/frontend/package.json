@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "acorn": ">=5.7.4",
-    "axios": ">=0.18.1",
+    "axios": ">=0.21.1",
     "dot-prop": ">=5.1.1",
     "graphiql": "^0.11.11",
     "handlebars": ">=4.3.0",
