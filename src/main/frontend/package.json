@@ -10,7 +10,7 @@
     "handlebars": ">=4.3.0",
     "http-proxy-middleware": "^1.0.5",
     "kind-of": ">=6.0.3",
-    "lodash": ">=4.17.19",
+    "lodash": ">=4.17.21",
     "minimist": ">=0.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
