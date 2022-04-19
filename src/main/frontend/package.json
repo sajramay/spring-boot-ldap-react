@@ -11,7 +11,7 @@
     "http-proxy-middleware": "^1.0.5",
     "kind-of": ">=6.0.3",
     "lodash": ">=4.17.21",
-    "minimist": ">=0.2.1",
+    "minimist": ">=1.2.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^5.0.7",
